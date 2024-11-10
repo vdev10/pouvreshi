@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Current Weather in Cyprus</title>
+    <title>Pou vreshi?</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,7 +69,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Current Weather in Cyprus</h1>
+        <h1>Pou vreshi?</h1>
         <div id="weather-info">
             <p>Loading...</p>
         </div>
@@ -135,7 +135,7 @@
                         <div>
                             <h2>${city.name}</h2>
                             <p>${city.description}, ${city.temp}°C</p>
-                            <p>${city.isRaining ? 'Currently raining' : 'No rain'}</p>
+                            <p>${city.isRaining ? 'Vreshi' : 'Tipote'}</p>
                         </div>
                     `;
                     weatherInfoDiv.appendChild(cityDiv);
