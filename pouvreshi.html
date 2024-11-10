@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Weather in Cyprus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #6dd5ed, #2193b0);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #2193b0;
+        }
+        #weather-info {
+            margin-top: 20px;
+        }
+        .city {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .city img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+        .city div {
+            text-align: left;
+        }
+        .city h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .city p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+        .raining {
+            background: #f5929f;
+			color:white;
+        }
+		 .raining p {
+			  color: white;
+			font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Current Weather in Cyprus</h1>
+        <div id="weather-info">
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKey = '602a465c29b8489e9d0df5a7d170d81a'; // Replace with your OpenWeatherMap API key
+            const cyprusCities = [
+                { name: 'Nicosia', id: 146268 },
+                { name: 'Limassol', id: 146384 },
+                { name: 'Larnaca', id: 146400 },
+                { name: 'Famagusta', id: 146617 },
+                { name: 'Paphos', id: 146214 },
+            ];
+
+            const weatherInfoDiv = document.getElementById('weather-info');
+            weatherInfoDiv.innerHTML = '';
+
+            cyprusCities.forEach(city => {
+                fetch(`https://api.openweathermap.org/data/2.5/weather?id=${city.id}&appid=${apiKey}&units=metric`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.weather && Array.isArray(data.weather) && data.weather.length > 0) {
+                            const isRaining = data.weather.some(condition => condition.main.toLowerCase() === 'rain');
+                            const cityDiv = document.createElement('div');
+							debugger;
+                            cityDiv.className = 'city' + (isRaining ? ' raining' : '');
+                            cityDiv.innerHTML = `
+                                <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" alt="${data.weather[0].description}">
+                                <div>
+                                    <h2>${city.name}</h2>
+                                    <p>${data.weather[0].description}, ${data.main.temp}°C</p>
+                                    <p>${isRaining ? 'Currently raining' : 'No rain'}</p>
+                                </div>
+                            `;
+                            weatherInfoDiv.appendChild(cityDiv);
+                        } else {
+                            throw new Error('Weather data is unavailable');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching weather data:', error);
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'city';
+                        errorDiv.innerHTML = `<div><h2>${city.name}</h2><p>Error fetching data</p></div>`;
+                        weatherInfoDiv.appendChild(errorDiv);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
